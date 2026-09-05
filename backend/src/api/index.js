@@ -11,7 +11,10 @@ dotenv.config();
 const app = express();
 const PORT = Number(process.env.PORT) || 5000;
 
-app.use(cors());
+app.use(cors({
+  origin: "*",
+  methods:["POST","PUT","DELETE","GET"]
+}));
 app.use(express.json());
 
 app.get("/", (_req, res) => {
