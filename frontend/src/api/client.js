@@ -1,4 +1,4 @@
-const API = import.meta.env.VITE_API_URL || "https://demo-zgkp.onrender.com";
+const API = import.meta.env.VITE_API_URL || "https://demo-zgkp.onrender.com/api";
 const TELEGRAM_BOT_USERNAME = import.meta.env.VITE_TELEGRAM_BOT_USERNAME || '';
 
 function getToken() {
