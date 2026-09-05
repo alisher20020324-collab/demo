@@ -1,5 +1,5 @@
 import bcrypt from "bcryptjs";
-import { users } from "../models/userModel.js";
+import { User } from "../models/userModel.js";
 
 export const signup = async (req, res) => {
   try {
@@ -26,24 +26,19 @@ export const signup = async (req, res) => {
       return res.status(400).json({ message: "Parol kamida 6 ta belgidan iborat bo‘lsin" });
     }
 
-    if (users.some((u) => u.email === email)) {
+    const existing = await User.findOne({ email });
+    if (existing) {
       return res.status(409).json({ message: "Bu email mavjud" });
     }
 
     const passwordHash = await bcrypt.hash(password, 10);
 
-    const user = {
-      id: users.length + 1,
+    const user = await User.create({
       name,
       email,
       password: passwordHash,
-      role,
-      createdAt: new Date().toISOString(),
-      lastLoginAt: null,
-      loginCount: 0
-    };
-
-    users.push(user);
+      role
+    });
 
     return res.status(201).json({
       message: "Ro‘yxatdan o‘tildi",

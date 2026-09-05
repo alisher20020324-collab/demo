@@ -1,6 +1,6 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { users, incrementTotalLogins } from "../models/userModel.js";
+import { User, incrementTotalLogins } from "../models/userModel.js";
 
 export const login = async (req, res) => {
   try {
@@ -15,7 +15,7 @@ export const login = async (req, res) => {
       return res.status(500).json({ message: "JWT_SECRET .env da sozlanmagan" });
     }
 
-    const user = users.find((u) => u.email === email);
+    const user = await User.findOne({ email });
 
     if (!user) {
       return res.status(401).json({ message: "Email yoki parol noto‘g‘ri" });
@@ -28,9 +28,10 @@ export const login = async (req, res) => {
     }
 
     // Login statistikasi — admin panelda ko'rsatish uchun
-    user.lastLoginAt = new Date().toISOString();
+    user.lastLoginAt = new Date();
     user.loginCount = (user.loginCount || 0) + 1;
-    incrementTotalLogins();
+    await user.save();
+    await incrementTotalLogins();
 
     const token = jwt.sign(
       { id: user.id, email: user.email, name: user.name, role: user.role },

@@ -5,8 +5,10 @@ import parkingRoute from "../routes/parkingRoute.js";
 import categoryRoute from "../routes/categoryRoute.js";
 import userRoute from "../routes/userRoute.js";
 import { startBot } from "../bot/bot.js";
+import { connectDB } from "../config/db.js";
 
 dotenv.config();
+connectDB();
 
 const app = express();
 const PORT = Number(process.env.PORT) || 5000;
